@@ -96,7 +96,7 @@ class _HalamanProdukState extends State<HalamanProduk> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => UbahProduk(
+                        MaterialPageRoute(builder: (context) => EditProduk(
                         ListData: {
                           'id_produk': _listdata[index]['id_produk'],
                           'nama_produk': _listdata[index]['nama_produk'],
