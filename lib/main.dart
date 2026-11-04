@@ -1,3 +1,4 @@
+import 'package:crud_pari/login_page.dart';
 import 'package:flutter/material.dart';
 import 'halaman_produk.dart';
 
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Aplikasi Produk',
-      home: HalamanProduk(),
+      home: LoginPage(),
     );
   }
 }

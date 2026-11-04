@@ -1,6 +1,6 @@
-import 'halaman_produk.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'halaman_produk.dart';
 
 class EditProduk extends StatefulWidget {
   final Map ListData;
@@ -11,37 +11,40 @@ class EditProduk extends StatefulWidget {
 }
 
 class _EditProdukState extends State<EditProduk> {
-  final formkey=GlobalKey<FormState>();
+  final formKey=GlobalKey<FormState>();
   TextEditingController id_produk=TextEditingController();
   TextEditingController nama_produk=TextEditingController();
   TextEditingController harga_produk=TextEditingController();
 
-  Future<bool> _edit()async {
-    final respon=await http.post(
+  Future<bool> _edit() async{
+    final respon =await http.post(
       Uri.parse('http://localhost/api_pari/edit.php'),
-      body: {
-        'id_produk': widget.ListData['id_produk'],
-        'nama_produk': nama_produk.text,
-        'harga_produk': harga_produk.text,
+      body:{
+        'id_produk':id_produk.text,
+        'nama_produk':nama_produk.text,
+        'harga_produk':harga_produk.text,
       },
     );
-    if (respon.statusCode == 200) {
+    if(respon.statusCode == 200){
       return true;
     }
     return false;
   }
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    id_produk.text=widget.ListData['id_produk'];
+    nama_produk.text=widget.ListData['nama_produk'];
+    harga_produk.text=widget.ListData['harga_produk'];
+    return Scaffold(
       appBar: AppBar(
-        title: const Text('edit Produk'),
-        backgroundColor: const Color.fromARGB(255, 33, 107, 243),
+        title: Text('Edit Produk'),
+        backgroundColor: Colors.blueGrey,
       ),
       body: Form(
-        key: formkey,
+        key:formKey,
         child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
+          padding: EdgeInsets.all(20),
+          child:Column(
             children: [
               TextFormField(
                 controller: nama_produk,
@@ -51,14 +54,14 @@ class _EditProdukState extends State<EditProduk> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Nama Produk Tidak Boleh Kosong';
+                validator: (value){
+                  if(value!.isEmpty){
+                    return 'Nama Produk tidak boleh kosong';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               TextFormField(
                 controller: harga_produk,
                 decoration: InputDecoration(
@@ -67,50 +70,47 @@ class _EditProdukState extends State<EditProduk> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Harga Produk Tidak Boleh Kosong';
+                validator: (value){
+                  if(value!.isEmpty){
+                    return 'Harga Produk tidak boleh kosong';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: () {
-                  if (formkey.currentState!.validate()) {
-                    _edit().then((value) {
-                      if (value) {
-                        final snackBar = SnackBar(
-                          content: const Text('produk berhasil di edit'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      } else {
-                        final snackBar = SnackBar(
-                          content: const Text('produk gagal di edit'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    borderRadius: BorderRadius.circular(12)
+                  )),
+                onPressed: (){
+                  if(formKey.currentState!.validate()){
+                    _edit().then((value){
+                      if(value){
+                        final snackBar=SnackBar(
+                          content: const Text('Produk berhasil diedit'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }else{
+                        final snackBar=SnackBar(
+                          content: const Text('Produk gagal diedit'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                       Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HalamanProduk(),
-                        ),
-                        (route) => false,
+                        context, MaterialPageRoute(
+                          builder: (context)=>HalamanProduk()),
+                          (route)=>false,
                       );
                     });
                   }
                 },
-                child: const Text('edit'),
-              ),
+                 child: Text('Edit'),
+                 ),
             ],
           ),
-        ),
-      ),
+        )
+        )
     );
   }
 }

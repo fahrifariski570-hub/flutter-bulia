@@ -1,4 +1,4 @@
-import 'halaman_produk.dart';
+import 'package:crud_pari/halaman_produk.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,36 +10,35 @@ class TambahProduk extends StatefulWidget {
 }
 
 class _TambahProdukState extends State<TambahProduk> {
-  final formkey = GlobalKey<FormState>();
-  TextEditingController nama_produk = TextEditingController();
-  TextEditingController harga_produk = TextEditingController();
+  final formKey=GlobalKey<FormState>();
+  TextEditingController nama_produk=TextEditingController();
+  TextEditingController harga_produk=TextEditingController();
 
-  Future<bool> _save() async {
-    final respon = await http.post(
-      Uri.parse('http://localhost/api_pari/tambah.php'),
-      body: {
-        'nama_produk': nama_produk.text,
-        'harga_produk': harga_produk.text,
+  Future<bool> _save() async{
+    final respon =await http.post(
+      Uri.parse('http://localhost/api_lia2/create.php'),
+      body:{
+        'nama_produk':nama_produk.text,
+        'harga_produk':harga_produk.text,
       },
     );
-    if (respon.statusCode == 200) {
+    if(respon.statusCode == 200){
       return true;
     }
     return false;
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tambah Produk'),
-        backgroundColor: const Color.fromARGB(255, 33, 107, 243),
+        title: Text('Tambah Produk'),
+        backgroundColor: Colors.blueGrey,
       ),
       body: Form(
-        key: formkey,
+        key:formKey,
         child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
+          padding: EdgeInsets.all(20),
+          child:Column(
             children: [
               TextFormField(
                 controller: nama_produk,
@@ -49,14 +48,14 @@ class _TambahProdukState extends State<TambahProduk> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Nama Produk Tidak Boleh Kosong';
+                validator: (value){
+                  if(value!.isEmpty){
+                    return 'Nama Produk tidak boleh kosong';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               TextFormField(
                 controller: harga_produk,
                 decoration: InputDecoration(
@@ -65,50 +64,47 @@ class _TambahProdukState extends State<TambahProduk> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Harga Produk Tidak Boleh Kosong';
+                validator: (value){
+                  if(value!.isEmpty){
+                    return 'Harga Produk tidak boleh kosong';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: () {
-                  if (formkey.currentState!.validate()) {
-                    _save().then((value) {
-                      if (value) {
-                        final snackBar = SnackBar(
-                          content: const Text('produk berhasil di simpan'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      } else {
-                        final snackBar = SnackBar(
-                          content: const Text('produk gagal di simpan'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    borderRadius: BorderRadius.circular(12)
+                  )),
+                onPressed: (){
+                  if(formKey.currentState!.validate()){
+                    _save().then((value){
+                      if(value){
+                        final snackBar=SnackBar(
+                          content: const Text('Produk berhasil disimpan'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }else{
+                        final snackBar=SnackBar(
+                          content: const Text('Produk gagal disimpan'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                       Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HalamanProduk(),
-                        ),
-                        (route) => false,
+                        context, MaterialPageRoute(
+                          builder: (context)=>HalamanProduk()),
+                          (route)=>false,
                       );
                     });
                   }
                 },
-                child: const Text('simpan'),
-              ),
+                 child: Text('Save'),
+                 ),
             ],
           ),
-        ),
-      ),
+        )
+        )
     );
   }
 }
