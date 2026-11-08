@@ -1,7 +1,10 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'DashboardAdmin.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -16,15 +19,12 @@ class _LoginPageState extends State<LoginPage> {
   bool loading = false;
   bool hidePassword = true;
 
-  final String url = 'http://localhost/api_moses/login.php';
+  final String url = 'http://localhost/api_pari/login.php';
 
   Future<void> login() async {
-    if (usernameController.text.isEmpty ||
-        passwordController.text.isEmpty) {
+    if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Username dan Password harus diisi'),
-        ),
+        const SnackBar(content: Text('Username dan Password harus diisi')),
       );
       return;
     }
@@ -50,16 +50,12 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => Dashboardadmin(
-              nama: hasil['data']['nama'],
-            ),
+            builder: (context) => Dashboardadmin(nama: hasil['data']['nama']),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(hasil['pesan'] ?? 'Login gagal'),
-          ),
+          SnackBar(content: Text(hasil['pesan'] ?? 'Login gagal')),
         );
       }
     } catch (e) {
@@ -68,9 +64,7 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Tidak dapat terhubung ke server'),
-        ),
+        const SnackBar(content: Text('Tidak dapat terhubung ke server')),
       );
     } finally {
       if (mounted) {
@@ -96,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
-
           child: Card(
             elevation: 5,
             shape: RoundedRectangleBorder(
@@ -119,10 +112,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   const Text(
                     'Halaman Login',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 30),
@@ -171,13 +161,8 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: loading ? null : login,
 
                       child: loading
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                          : const Text(
-                              'Login',
-                              style: TextStyle(fontSize: 16),
-                            ),
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text('Login', style: TextStyle(fontSize: 16)),
                     ),
                   ),
                 ],

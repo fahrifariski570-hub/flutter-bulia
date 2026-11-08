@@ -1,6 +1,8 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'detail_produk.dart';
 import 'edit_produk.dart';
 import 'tambah_produk.dart';
@@ -19,25 +21,29 @@ class _HalamanProdukState extends State<HalamanProduk> {
   Future<void> _getdata() async {
     try {
       final respon = await http.get(
-        Uri.parse('http://localhost/api_pari/read.php'),
+        Uri.parse('http://localhost/api_pari/tampil.php'),
       );
+
       if (respon.statusCode == 200) {
         final data = jsonDecode(respon.body);
         setState(() {
           _listdata = data;
-          _loading = false;
         });
       } else {
         print('Failed to load data:${respon.statusCode}');
       }
     } catch (e) {
       print('Error:$e');
+    } finally {
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
   Future<void> deleteProduk(String idProduk) async {
     final respon = await http.post(
-      Uri.parse('http://localhost/api_pari/delete.php'),
+      Uri.parse('http://localhost/api_pari/hapus.php'),
       body: {'id_produk': idProduk},
     );
     if (respon.statusCode == 200) {
@@ -77,7 +83,7 @@ class _HalamanProdukState extends State<HalamanProduk> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailProduk(
-                            ListData: {
+                            listdata: {
                               'id_produk': _listdata[index]['id_produk'],
                               'nama_produk': _listdata[index]['nama_produk'],
                               'harga_produk': _listdata[index]['harga_produk'],
@@ -95,13 +101,13 @@ class _HalamanProdukState extends State<HalamanProduk> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.edit,color:Colors.brown),
+                            icon: Icon(Icons.edit, color: Colors.brown),
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => EditProduk(
-                                    ListData: {
+                                    listdata: {
                                       'id_produk':
                                           _listdata[index]['id_produk'],
                                       'nama_produk':

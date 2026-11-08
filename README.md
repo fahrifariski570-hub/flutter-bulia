@@ -1,4 +1,4 @@
-# crud_reinno
+# crud_pari
 
 A new Flutter project.
 

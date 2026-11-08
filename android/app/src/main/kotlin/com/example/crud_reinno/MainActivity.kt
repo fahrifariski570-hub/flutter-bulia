@@ -1,4 +1,4 @@
-package com.example.crud_reinno
+package com.example.crud_pari
 
 import io.flutter.embedding.android.FlutterActivity
 
