@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # crud_pari
+=======
+# crud  
+>>>>>>> 0e1f8cb957c60a8fef84bda1a291d5edaacbe9f9
 
 A new Flutter project.
 
