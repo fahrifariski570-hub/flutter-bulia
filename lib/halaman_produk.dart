@@ -69,7 +69,7 @@ class _HalamanProdukState extends State<HalamanProduk> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Halaman Produk'),
-        backgroundColor: Colors.brown,
+        backgroundColor: Colors.blue,
       ),
       body: _loading
           ? Center(child: CircularProgressIndicator())

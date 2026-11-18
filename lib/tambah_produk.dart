@@ -1,6 +1,7 @@
 import 'package:crud_pari/halaman_produk.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class TambahProduk extends StatefulWidget {
   const TambahProduk({super.key});
@@ -14,19 +15,39 @@ class _TambahProdukState extends State<TambahProduk> {
   TextEditingController nama_produk = TextEditingController();
   TextEditingController harga_produk = TextEditingController();
 
-  Future<bool> _save() async {
+
+Future<bool> _save() async {
+  try {
     final respon = await http.post(
       Uri.parse('http://localhost/api_pari/tambah.php'),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+      },
       body: {
-        'nama_produk': nama_produk.text,
-        'harga_produk': harga_produk.text,
+        'nama_produk': nama_produk.text.trim(),
+        'harga_produk': harga_produk.text.trim(),
       },
     );
-    if (respon.statusCode == 200) {
+
+    print('STATUS: ${respon.statusCode}');
+    print('RESPONSE: ${respon.body}');
+
+    final data = jsonDecode(respon.body);
+
+    if (respon.statusCode == 200 &&
+        data['pesan'] == 'sukses') {
       return true;
     }
+
+    return false;
+
+  } catch (e) {
+    print('ERROR API: $e');
     return false;
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -79,30 +100,37 @@ class _TambahProdukState extends State<TambahProduk> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    _save().then((value) {
-                      if (value) {
-                        final snackBar = SnackBar(
-                          content: const Text('Produk berhasil disimpan'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      } else {
-                        final snackBar = SnackBar(
-                          content: const Text('Produk gagal disimpan'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HalamanProduk(),
-                        ),
-                        (route) => false,
-                      );
-                    });
-                  }
-                },
+                onPressed: () async {
+                if (!formKey.currentState!.validate()) return;
+
+                final berhasil = await _save();
+
+                if (!mounted) return;
+
+                if (berhasil) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Produk berhasil disimpan'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HalamanProduk(),
+                    ),
+                    (route) => false,
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Produk gagal disimpan. Periksa koneksi API.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
                 child: Text('Save'),
               ),
             ],
